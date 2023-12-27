@@ -1,0 +1,38 @@
+{
+  "name": "ChatGpt Custom Prompt",
+  "version": "1.0.0",
+  "description": "ChatGpt Custom Prompt",
+  "manifest_version": 3,
+  "author": "Phuoc Nguyen",
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "/templates/container.html"
+      ],
+      "matches": [
+        "<all_urls>"
+      ]
+    }
+  ],
+  "content_scripts": [
+    {
+      "matches": [
+        "https://chat.openai.com/*"
+      ],
+      "css": ["/css/style.css"],
+      "js": [
+        "/js/jquery.js",
+        "/js/content-script.js"
+      ]
+    }
+  ],
+  "permissions": [
+    "activeTab"
+  ],
+  "icons": {
+    "16": "/icons/icon16.png",
+    "32": "/icons/icon32.png",
+    "48": "/icons/icon48.png",
+    "128": "/icons/icon128.png"
+  }
+}
