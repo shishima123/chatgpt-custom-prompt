@@ -26,97 +26,51 @@ function init() {
     inInit = true;
     try {
         setTimeout(function () {
-            tryInitAutoPrompt();
+            let autoPromptClass = new ChatGPT()
+            tryInitAutoPrompt(autoPromptClass)
         }, 500)
     } finally {
         inInit = false;
     }
 }
 
-function tryInitAutoPrompt() {
-    const responseForm = $('form.stretch div').first();
-    if (!responseForm.length) {
+async function tryInitAutoPrompt(autoPromptClass) {
+    const appendParentElement = autoPromptClass.getAppendParentElement();
+    if (!appendParentElement.length) {
         return;
     }
 
-    if (!$("#auto-prompt").length) {
+    if (!$("#auto-prompt-container").length) {
         const url = chrome.runtime.getURL('/templates/container.html');
-        fetch(url)
+        await fetch(url)
             .then(response => response.text())
-            .then(text => {
-                responseForm.append(text)
-                if ($("#auto-prompt").length) {
-                    listenChatGptTextArea()
-                    initSetLocalStorage()
-                }
-            }).then(() => {
-            if (!$("#auto-prompt").length) {
-                count++;
-                if (count < maxTries) {
-                    console.log(`AutoPrompt: Could not load template - try again ${count}/${maxTries}`);
-                    setTimeout(() => {
-                        tryInitAutoPrompt();
-                    }, 250); // try again
-                } else {
-                    console.log('AutoPrompt: Could not load template - abort');
-                }
+            .then(html => {
+                appendParentElement.append(html)
+            })
+
+        if ($("#auto-prompt-container").length) {
+            autoPromptClass.init()
+            initSetLocalStorage()
+        } else {
+            count++;
+            if (count < maxTries) {
+                console.log(`AutoPrompt: Could not load template - try again ${count}/${maxTries}`);
+                setTimeout(() => {
+                    this.tryInitAutoPrompt();
+                }, 250); // try again
+            } else {
+                console.log('AutoPrompt: Could not load template - abort');
             }
-        });
-    }
-}
-
-function listenChatGptTextArea() {
-    $('form.stretch').on('submit', function (e) {
-        appendPromptToTextArea()
-    })
-    $('form.stretch textarea').on('keydown', function (event) {
-        if (event.key == 'Enter' && !event.shiftKey && !event.ctrlKey && !event.altKey) {
-            appendPromptToTextArea();
         }
-    })
-}
-
-function appendPromptToTextArea() {
-    if ($('#shouldTranslate').is(":checked")) {
-        $('form.stretch textarea').val(getPromptText())
     }
-}
-
-function getPromptText() {
-    let chatGptInputVal = $('#prompt-textarea').text()
-    let langs = $('input[name="lang[]"]:checked')
-    if (!langs.length) {
-        alert('Select lang')
-        return chatGptInputVal;
-    }
-    let lang = getLang(langs);
-
-    return getTransText(chatGptInputVal, lang)
-}
-
-function getLang(langs) {
-    var langList = [];
-    langs.each(function () {
-        langList.push($(this).val());
-    })
-
-    return langList.join(' and ')
-}
-
-function getTransText(chatGptInputVal, lang) {
-    return `You are a highly skilled AI trained in language translation. I would like you to translate the text delimited by triple quotes into ${lang} language, ensuring that the translation is colloquial and authentic.
-Only give me the output and nothing else. Do not wrap responses in quotes.
-"""
-${chatGptInputVal}
-"""`
 }
 
 function initSetLocalStorage() {
     let storageKeys = {
-        'should-translate': 'chatgpt-chatgpt-custom-prompt:should-translate',
-        'vi_cb': 'chatgpt-chatgpt-custom-prompt:vi_cb',
-        'en_cb': 'chatgpt-chatgpt-custom-prompt:en_cb',
-        'jp_cb': 'chatgpt-chatgpt-custom-prompt:jp_cb',
+        'should-translate': 'chatgpt-custom-prompt:should-translate',
+        'vi_cb': 'chatgpt-custom-prompt:vi_cb',
+        'en_cb': 'chatgpt-custom-prompt:en_cb',
+        'jp_cb': 'chatgpt-custom-prompt:jp_cb',
     }
 
     $.each(storageKeys, function (elementId, storageKey) {
@@ -124,11 +78,13 @@ function initSetLocalStorage() {
             $(`#${elementId}`).attr('checked', localStorage.getItem(storageKey) === 'true')
         }
     });
+
     $('#shouldTranslate, input[name="lang[]"]').on('change', function () {
-        localStorage.setItem('chatgpt-chatgpt-custom-prompt:should-translate', $('#shouldTranslate').is(':checked'))
+        localStorage.setItem('chatgpt-custom-prompt:should-translate', $('#shouldTranslate').is(':checked'))
+
         $('input[name="lang[]"]').each(function () {
             let key = $(this).attr('id')
-            localStorage.setItem(`chatgpt-trans-convert:${key}`, $(this).is(':checked'))
+            localStorage.setItem(`chatgpt-custom-prompt:${key}`, $(this).is(':checked'))
         })
     })
 }
