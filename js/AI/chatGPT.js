@@ -3,6 +3,8 @@ class ChatGPT extends PromptBase {
         super();
         this.$promptInputElement = $('#prompt-textarea');
         this.$appendParentElement = $('form.stretch div').first();
+        this.$mutationObserverElement = document.querySelector('body > div:first-child');
+        this.$customCss = 'custom-chatgpt';
     }
 
     init() {
@@ -23,7 +25,7 @@ class ChatGPT extends PromptBase {
 
     appendNewPromptTextToPromptInput() {
         if ($('#shouldTranslate').is(":checked")) {
-            $('form.stretch textarea').val(this.getNewPromptText())
+            this.$promptInputElement.val(this.getNewPromptText())
         }
     }
 }

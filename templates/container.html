@@ -1,34 +1,35 @@
-<div id="auto-prompt-container" class="flex py-5">
+<div id="auto-prompt-container">
     <label
             for="shouldTranslate"
-            class="flex items-center cursor-pointer mb-3 mr-8"
+            class="toggle"
     >
         <!-- toggle -->
-        <div class="relative">
+        <div>
             <!-- input -->
-            <input id="shouldTranslate" type="checkbox" class="sr-only custom-checkbox" value="1" checked/>
+            <input id="shouldTranslate" type="checkbox" class="sr-only" value="1" checked/>
             <!-- line -->
-            <div class="w-10 h-4 bg-gray-400 rounded-full shadow-inner"></div>
+            <div class="line"></div>
             <!-- dot -->
-            <div class="dot absolute w-6 h-6 bg-white rounded-full shadow -left-1 -top-1 transition"></div>
+            <div class="dot"></div>
         </div>
         <!-- label -->
-        <div class="ml-3">
+        <div class="label">
             Translate
         </div>
     </label>
-    <div class="flex">
-        <div class="flex items-start mr-2">
-            <input type="checkbox" class="border-gray-300 rounded h-5 w-5 mr-2 cursor-pointer" id="vi_cb" name="lang[]" value="vietnamese" checked/>
+    <div class="lang-wrapper">
+        <div class="checkbox mr-2">
+            <input type="checkbox" id="vi_cb" name="lang[]" value="vietnamese" checked/>
             <label for="vi_cb" class="cursor-pointer">Vietnam</label>
         </div>
-        <div class="flex items-start mr-2">
-            <input type="checkbox" class="border-gray-300 rounded h-5 w-5 mr-2 cursor-pointer" id="en_cb" name="lang[]" value="english"/>
+        <div class="checkbox mr-2">
+            <input type="checkbox" id="en_cb" name="lang[]" value="english"/>
             <label for="en_cb" class="cursor-pointer">English</label>
         </div>
-        <div class="flex items-start">
-            <input type="checkbox" class="border-gray-300 rounded h-5 w-5 mr-2 cursor-pointer" id="jp_cb" name="lang[]" value="japanese"/>
+        <div class="checkbox">
+            <input type="checkbox" id="jp_cb" name="lang[]" value="japanese"/>
             <label for="jp_cb" class="cursor-pointer">Japanese</label>
         </div>
     </div>
 </div>
+
