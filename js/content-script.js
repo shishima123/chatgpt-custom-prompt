@@ -68,7 +68,7 @@ async function tryInitAutoPrompt(autoPromptClass) {
 
 function initSetLocalStorage() {
     let storageKeys = {
-        'should-translate': 'chatgpt-custom-prompt:should-translate',
+        'shouldTranslate': 'chatgpt-custom-prompt:should-translate',
         'vi_cb': 'chatgpt-custom-prompt:vi_cb',
         'en_cb': 'chatgpt-custom-prompt:en_cb',
         'jp_cb': 'chatgpt-custom-prompt:jp_cb',
