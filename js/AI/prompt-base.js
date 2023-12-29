@@ -1,6 +1,8 @@
 class PromptBase {
     $promptInputElement
     $appendParentElement
+    $mutationObserverElement
+    $customCss
 
     getNewPromptText() {
         return this.getTransText(this.$promptInputElement.text())
@@ -32,5 +34,13 @@ ${inputText}
 
     getAppendParentElement() {
         return this.$appendParentElement
+    }
+
+    getMutationObserverElement() {
+        return this.$mutationObserverElement
+    }
+
+    getCustomCss() {
+        return this.$customCss
     }
 }

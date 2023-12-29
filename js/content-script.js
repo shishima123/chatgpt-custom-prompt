@@ -46,6 +46,7 @@ async function tryInitAutoPrompt(autoPromptClass) {
             .then(response => response.text())
             .then(html => {
                 appendParentElement.append(html)
+                $("#auto-prompt-container").addClass(autoPromptClass.getCustomCss())
             })
 
         if ($("#auto-prompt-container").length) {

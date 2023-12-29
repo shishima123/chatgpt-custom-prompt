@@ -22,8 +22,8 @@
       "css": ["/css/style.css"],
       "js": [
         "/js/jquery.js",
-        "/js/prompt-base.js",
-        "/js/chatGPT.js",
+        "/js/AI/prompt-base.js",
+        "/js/AI/chatGPT.js",
         "/js/content-script.js"
       ]
     }
