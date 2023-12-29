@@ -1,34 +1,35 @@
 const maxTries = 30;
 let count = 0;
 $(function () {
-    const div = document.querySelector('body > div:first-child');
+    let autoPromptClass = getAutoPromptClass()
+
+    const div = autoPromptClass.getMutationObserverElement();
     const observer = new MutationObserver(function () {
-        init();
+        init(autoPromptClass);
     });
     observer.observe(div, {childList: true});
 
     // Necessary, if a chat was aborted and the page was reloaded, then AutoPrompt is initially included.
     // But as soon as the "Regenerate Response" or so is clicked, then it must be loaded again
     div.addEventListener('click', () => {
-        init()
+        init(autoPromptClass)
     });
 
-    init();
+    init(autoPromptClass);
 
 })
 
 var inInit = false;
 
-function init() {
+function init(autoPromptClass) {
     if (inInit) {
         return;
     }
     inInit = true;
     try {
         setTimeout(function () {
-            let autoPromptClass = new ChatGPT()
             tryInitAutoPrompt(autoPromptClass)
-        }, 500)
+        }, 1000)
     } finally {
         inInit = false;
     }
@@ -87,5 +88,20 @@ function initSetLocalStorage() {
             localStorage.setItem(`chatgpt-custom-prompt:${key}`, $(this).is(':checked'))
         })
     })
+}
+
+function getAutoPromptClass() {
+    let url = window.location.href
+    let autoPromptClass;
+    switch (true) {
+        case url.includes('openai'):
+            autoPromptClass = new ChatGPT()
+            break;
+        case url.includes('bard'):
+            autoPromptClass = new Bard()
+            break;
+    }
+
+    return autoPromptClass;
 }
 

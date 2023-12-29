@@ -43,4 +43,52 @@ ${inputText}
     getCustomCss() {
         return this.$customCss
     }
+
+    handlePromptInsert = (
+        inputField,
+        prompt
+    ) => {
+        if (
+            inputField instanceof HTMLInputElement ||
+            inputField instanceof HTMLTextAreaElement
+        ) {
+            // For a regular input or textarea
+            const cursorPosition = inputField.selectionStart ?? 0;
+            const currentValue = inputField.value;
+            const newValue =
+                currentValue.slice(0, cursorPosition) +
+                prompt +
+                currentValue.slice(cursorPosition);
+            inputField.value = newValue;
+            inputField.focus();
+            inputField.setSelectionRange(
+                cursorPosition + prompt.length,
+                cursorPosition + prompt.length
+            );
+            const event = new Event("input", {bubbles: true});
+            // inputField.dispatchEvent(event);
+        } else if (inputField.getAttribute("contenteditable") === "true") {
+            // For a contenteditable element
+            inputField.focus();
+            let sel, range;
+            if (window.getSelection) {
+                console.log(1);
+                sel = window.getSelection();
+                if (sel?.getRangeAt && sel.rangeCount) {
+                    range = sel.getRangeAt(0);
+                    range.deleteContents();
+                    range.insertNode(document.createTextNode(prompt));
+                    range.collapse(false);
+                }
+            } else if (
+                document.selection &&
+                document.selection.createRange
+            ) {
+                console.log(2);
+                document.selection.createRange().text = prompt;
+            }
+            const event = new Event("input", {bubbles: true});
+            // inputField.dispatchEvent(event);
+        }
+    };
 }

@@ -17,13 +17,15 @@
   "content_scripts": [
     {
       "matches": [
-        "https://chat.openai.com/*"
+        "https://chat.openai.com/*",
+        "https://bard.google.com/*"
       ],
       "css": ["/css/style.css"],
       "js": [
         "/js/jquery.js",
-        "/js/prompt-base.js",
-        "/js/chatGPT.js",
+        "/js/AI/prompt-base.js",
+        "/js/AI/chatGPT.js",
+        "/js/AI/bard.js",
         "/js/content-script.js"
       ]
     }
