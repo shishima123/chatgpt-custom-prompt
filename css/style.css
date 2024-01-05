@@ -89,3 +89,9 @@
     font-family: "Google Sans", "Helvetica Neue", sans-serif;
     justify-content: center;
 }
+
+#auto-prompt-container.custom-copilot {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+}

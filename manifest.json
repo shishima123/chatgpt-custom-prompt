@@ -18,14 +18,15 @@
     {
       "matches": [
         "https://chat.openai.com/*",
-        "https://bard.google.com/*"
+        "https://bard.google.com/*",
+        "https://copilot.microsoft.com/*"
       ],
       "css": ["/css/style.css"],
       "js": [
         "/js/jquery.js",
         "/js/AI/prompt-base.js",
         "/js/AI/chatGPT.js",
-        "/js/AI/bard.js",
+        "/js/AI/copilot.js",
         "/js/content-script.js"
       ]
     }

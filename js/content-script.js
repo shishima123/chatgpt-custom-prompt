@@ -1,3 +1,4 @@
+console.log('Running');
 const maxTries = 30;
 let count = 0;
 $(function () {
@@ -29,35 +30,35 @@ function init(autoPromptClass) {
     try {
         setTimeout(function () {
             tryInitAutoPrompt(autoPromptClass)
-        }, 1000)
+        }, 500)
     } finally {
         inInit = false;
     }
 }
 
 async function tryInitAutoPrompt(autoPromptClass) {
-    const appendParentElement = autoPromptClass.getAppendParentElement();
+    const appendParentElement = $(autoPromptClass.getAppendParentElement());
     if (!appendParentElement.length) {
         return;
     }
 
-    if (!$("#auto-prompt-container").length) {
+    if (!$(autoPromptClass.getAutoPromptContainerElement()).length) {
         const url = chrome.runtime.getURL('/templates/container.html');
         await fetch(url)
             .then(response => response.text())
             .then(html => {
                 appendParentElement.append(html)
             })
-
-        if ($("#auto-prompt-container").length) {
+        if ($(autoPromptClass.getAutoPromptContainerElement()).length) {
             autoPromptClass.init()
+            $('#auto-prompt-container').addClass(autoPromptClass.getCustomCss())
             initSetLocalStorage()
         } else {
             count++;
             if (count < maxTries) {
                 console.log(`AutoPrompt: Could not load template - try again ${count}/${maxTries}`);
                 setTimeout(() => {
-                    this.tryInitAutoPrompt();
+                    this.tryInitAutoPrompt(autoPromptClass);
                 }, 250); // try again
             } else {
                 console.log('AutoPrompt: Could not load template - abort');
@@ -68,7 +69,7 @@ async function tryInitAutoPrompt(autoPromptClass) {
 
 function initSetLocalStorage() {
     let storageKeys = {
-        'should-translate': 'chatgpt-custom-prompt:should-translate',
+        'shouldTranslate': 'chatgpt-custom-prompt:should-translate',
         'vi_cb': 'chatgpt-custom-prompt:vi_cb',
         'en_cb': 'chatgpt-custom-prompt:en_cb',
         'jp_cb': 'chatgpt-custom-prompt:jp_cb',
@@ -99,6 +100,9 @@ function getAutoPromptClass() {
             break;
         case url.includes('bard'):
             autoPromptClass = new Bard()
+            break;
+        case url.includes('copilot'):
+            autoPromptClass = new Copilot()
             break;
     }
 

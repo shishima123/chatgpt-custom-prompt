@@ -5,7 +5,7 @@ class PromptBase {
     $customCss
 
     getNewPromptText() {
-        return this.getTransText(this.$promptInputElement.text())
+        return this.getTransText($(this.getPromptInputElement()).text())
     }
 
     getLang() {
@@ -42,6 +42,14 @@ ${inputText}
 
     getCustomCss() {
         return this.$customCss
+    }
+
+    getAutoPromptContainerElement() {
+        return '#auto-prompt-container'
+    }
+
+    getPromptInputElement() {
+        return this.$promptInputElement
     }
 
     handlePromptInsert = (
