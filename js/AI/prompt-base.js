@@ -1,5 +1,8 @@
 class PromptBase {
+    // selector element where the input for entering prompt
     $promptInputElement
+
+    // selector element where the custom prompt option will be added
     $appendParentElement
     $mutationObserverElement
     $customCss
@@ -25,11 +28,16 @@ class PromptBase {
 
     getTransText(inputText) {
         let lang = this.getLang()
-        return `You are a highly skilled AI trained in language translation. I would like you to translate the text delimited by triple quotes into ${lang} language, ensuring that the translation is colloquial and authentic.
-Only give me the output and nothing else. Do not wrap responses in quotes.
+
+        return `Dịch sang tiếng ${lang}. Do not wrap responses in quotes and code block.
 """
 ${inputText}
 """`
+//         return `You are a highly skilled AI trained in language translation. I would like you to translate the text delimited by triple quotes into ${lang} language, ensuring that the translation is colloquial and authentic.
+// Only give me the output and nothing else. Do not wrap responses in quotes.
+// """
+// ${inputText}
+// """`
     }
 
     getAppendParentElement() {

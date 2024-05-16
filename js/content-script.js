@@ -1,4 +1,3 @@
-console.log('Running');
 const maxTries = 30;
 let count = 0;
 $(function () {
@@ -95,11 +94,8 @@ function getAutoPromptClass() {
     let url = window.location.href
     let autoPromptClass;
     switch (true) {
-        case url.includes('openai'):
+        case url.includes('chatgpt'):
             autoPromptClass = new ChatGPT()
-            break;
-        case url.includes('bard'):
-            autoPromptClass = new Bard()
             break;
         case url.includes('copilot'):
             autoPromptClass = new Copilot()
