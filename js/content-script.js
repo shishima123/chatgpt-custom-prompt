@@ -1,32 +1,33 @@
 const maxTries = 30;
 let count = 0;
 $(function () {
-    const div = document.querySelector('body > div:first-child');
+    let autoPromptClass = getAutoPromptClass()
+
+    const div = autoPromptClass.getMutationObserverElement();
     const observer = new MutationObserver(function () {
-        init();
+        init(autoPromptClass);
     });
     observer.observe(div, {childList: true});
 
     // Necessary, if a chat was aborted and the page was reloaded, then AutoPrompt is initially included.
     // But as soon as the "Regenerate Response" or so is clicked, then it must be loaded again
     div.addEventListener('click', () => {
-        init()
+        init(autoPromptClass)
     });
 
-    init();
+    init(autoPromptClass);
 
 })
 
 var inInit = false;
 
-function init() {
+function init(autoPromptClass) {
     if (inInit) {
         return;
     }
     inInit = true;
     try {
         setTimeout(function () {
-            let autoPromptClass = new ChatGPT()
             tryInitAutoPrompt(autoPromptClass)
         }, 500)
     } finally {
@@ -35,12 +36,12 @@ function init() {
 }
 
 async function tryInitAutoPrompt(autoPromptClass) {
-    const appendParentElement = autoPromptClass.getAppendParentElement();
+    const appendParentElement = $(autoPromptClass.getAppendParentElement());
     if (!appendParentElement.length) {
         return;
     }
 
-    if (!$("#auto-prompt-container").length) {
+    if (!$(autoPromptClass.getAutoPromptContainerElement()).length) {
         const url = chrome.runtime.getURL('/templates/container.html');
         await fetch(url)
             .then(response => response.text())
@@ -48,16 +49,16 @@ async function tryInitAutoPrompt(autoPromptClass) {
                 appendParentElement.append(html)
                 $("#auto-prompt-container").addClass(autoPromptClass.getCustomCss())
             })
-
-        if ($("#auto-prompt-container").length) {
+        if ($(autoPromptClass.getAutoPromptContainerElement()).length) {
             autoPromptClass.init()
+            $('#auto-prompt-container').addClass(autoPromptClass.getCustomCss())
             initSetLocalStorage()
         } else {
             count++;
             if (count < maxTries) {
                 console.log(`AutoPrompt: Could not load template - try again ${count}/${maxTries}`);
                 setTimeout(() => {
-                    this.tryInitAutoPrompt();
+                    this.tryInitAutoPrompt(autoPromptClass);
                 }, 250); // try again
             } else {
                 console.log('AutoPrompt: Could not load template - abort');
@@ -88,5 +89,20 @@ function initSetLocalStorage() {
             localStorage.setItem(`chatgpt-custom-prompt:${key}`, $(this).is(':checked'))
         })
     })
+}
+
+function getAutoPromptClass() {
+    let url = window.location.href
+    let autoPromptClass;
+    switch (true) {
+        case url.includes('chatgpt'):
+            autoPromptClass = new ChatGPT()
+            break;
+        case url.includes('copilot'):
+            autoPromptClass = new Copilot()
+            break;
+    }
+
+    return autoPromptClass;
 }
 

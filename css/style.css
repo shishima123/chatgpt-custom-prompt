@@ -85,7 +85,8 @@
     margin-right: 0.5rem;
 }
 
-#auto-prompt-container.custom-bard {
-    font-family: "Google Sans", "Helvetica Neue", sans-serif;
-    justify-content: center;
+#auto-prompt-container.custom-copilot {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
 }
